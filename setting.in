@@ -1,0 +1,24 @@
+[Setting]
+
+[Probability]
+5 stars acquisition probability:[0.6%]
+4 stars acquisition probability:[5.0%]
+3 stars acquisition probability:[94.4%]
+
+[Incremental]
+From the [72] times onwards, the probability of obtaining 5 stars gradually increases, each increment of [1.0%]
+4 stars are bound to appear in [10] draws or less.
+
+[lanauage]
+Your preferred language is [zh-cn].("zh-cn":简体中文,"en-us":English(US));
+
+[Tips]
+1.The total probability of obtaining 5 stars, 4 stars, and 3 stars must be 100%.
+
+2.Please do not easily modify anything other than the probability data, as this may cause the program to not work properly or the probability to be inaccurate.
+
+3.The minimum probability can only be taken to 0.001%, if the probability is less than 0.001% will be automatically taken to 0.001%.
+
+4.Probabilities can be expressed either in fractional or decimal form.For example, [72.0%] and [0.072] have equal validity.
+
+5.The simulation is done in a true random way.
