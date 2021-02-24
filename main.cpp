@@ -4,9 +4,13 @@ using namespace std;
 
 string fiveprobability,fourprobability,threeprobability,increaseprobaility,increasetime,fourguaranteed,lanauage;
 
-double fivep,fourp,threep,increasep,initalfive;
+double fivep;
 
-int increaset,fourpt,five=0,four=0,three=0,total=0,fivet=0,fourt=0;
+double fourp,threep,increasep,initalfive;
+
+int five=0,four=0,three=0,total=0,fivet=0,fourt=0;
+
+int increaset,fourpt;
 
 string extraction(string s,string a,string b,int times=1){
     if(times==1) return s.substr(s.find(a)+1,s.find(b)-s.find(a)-1);
@@ -67,7 +71,7 @@ double stringswitchdouble(string s){
         }
         tans*=pow(0.1,s.length()-s.find(".")-1);
         ans+=tans;
-        if(ans*pow(10,5)>=1) return ans;
+        if(ans*pow(10,5)>=1||ans==0) return ans;
         else return pow(0.1,5);
     }else{
         s=s.substr(0,s.length()-1);
@@ -83,7 +87,7 @@ double stringswitchdouble(string s){
         }
         tans*=pow(0.1,s.length()-s.find(".")-1);
         ans+=tans;
-        if(ans*pow(10,3)>=1) return ans*0.01;
+        if(ans*pow(10,3)>=1||ans==0) return ans*0.01;
         else return pow(0.1,5);
     }
 }
@@ -119,7 +123,7 @@ void judgment1(){
 
 void statistics(){
     cout<<"目前总抽数:"<<total<<endl;
-    cout<<"距离5星保底还有"<<max(1,(int)(increaset+(1-fivep)/increasep)-fivet)<<"抽,现在获取5星的概率为:"<<fivep<<endl;
+    cout<<"距离5星保底还有"<<max(1,(int)(increaset+(1-fivep)/increasep)-fivet)<<"抽,现在获取5星的概率为:"<<fivep*100<<"%"<<endl;
     cout<<"距离4星保底还有"<<max(1,(int)(fourpt-fourt))<<"抽"<<endl;
     cout<<"你抽到的:"<<endl;
     cout<<"5星:"<<five<<"个"<<endl;
@@ -153,6 +157,8 @@ void sweepstakes(int times=1){
         if(fourt==10){
             fourt=0;
             if(temp==3||temp==5) temp=4;
+            four++;
+            three--;
         }
         if(temp==5) cout<<"5星";
         else if(temp==4) cout<<"4星";
