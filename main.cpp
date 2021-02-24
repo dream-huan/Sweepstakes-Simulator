@@ -4,9 +4,9 @@ using namespace std;
 
 string fiveprobability,fourprobability,threeprobability,increaseprobaility,increasetime,fourguaranteed,lanauage;
 
-double fivep,fourp,threep,increasep;
+double fivep,fourp,threep,increasep,initalfive;
 
-int increaset,fourpt,five=0,four=0,three=0;
+int increaset,fourpt,five=0,four=0,three=0,total=0,fivet=0,fourt=0;
 
 string extraction(string s,string a,string b,int times=1){
     if(times==1) return s.substr(s.find(a)+1,s.find(b)-s.find(a)-1);
@@ -95,12 +95,13 @@ void newswitch(){
     increasep=stringswitchdouble(increaseprobaility);
     increaset=stringswitchint(increasetime);
     fourpt=stringswitchint(fourguaranteed);
+    initalfive=fivep;
 }
 
-int lanauagechoose(){
+/*int lanauagechoose(){
     if(lanauage=="zh-cn") return 1;
     else return 2;
-}
+}*/
 
 void judgment1(){
     if(fivep+fourp+threep!=1||increasep>1||increaset<0||fourpt<0){
@@ -109,14 +110,17 @@ void judgment1(){
     }
 }
 
-void judgment2(){
+/*void judgment2(){
     if(fivep+fourp+threep!=1||increasep>1){
         cout<<"Your probability data is not entered correctly, please read the tips in the setting file carefully"<<endl;
         exit(0);
     }
-}
+}*/
 
 void statistics(){
+    cout<<"目前总抽数:"<<total<<endl;
+    cout<<"距离5星保底还有"<<max(1,(int)(increaset+(1-fivep)/increasep)-fivet)<<"抽,现在获取5星的概率为:"<<fivep<<endl;
+    cout<<"距离4星保底还有"<<max(1,(int)(fourpt-fourt))<<"抽"<<endl;
     cout<<"你抽到的:"<<endl;
     cout<<"5星:"<<five<<"个"<<endl;
     cout<<"4星:"<<four<<"个"<<endl;
@@ -124,6 +128,9 @@ void statistics(){
 }
 
 void clear(){
+    total=0;
+    fivet=0;
+    fourt=0;
     five=0;
     four=0;
     three=0;
@@ -136,10 +143,20 @@ void sweepstakes(int times=1){
     int number=number=(rand()%sum)+1;
     cout<<"获得:"<<endl;
     while(times--){
+        total++;
         number=(rand()%sum)+1;
-        if(number>=1&&number<=sum*fivep) cout<<"5星",five++;
-        else if(number<=sum&&number>=(sum-(fourp*sum))) cout<<"4星",four++;
-        else cout<<"3星",three++;
+        int temp;
+        if(fivet>=increaset) fivep+=increasep;
+        if(number>=1&&number<=sum*fivep) temp=5,five++,fivet=0,fivep=initalfive;
+        else if(number<=sum&&number>=(sum-(fourp*sum))) temp=4,four++,fivet++,fourt=0;
+        else temp=3,three++,fivet++,fourt++;
+        if(fourt==10){
+            fourt=0;
+            if(temp==3||temp==5) temp=4;
+        }
+        if(temp==5) cout<<"5星";
+        else if(temp==4) cout<<"4星";
+        else cout<<"3星"; 
         if(times!=0) cout<<",";
     }
     cout<<endl;
