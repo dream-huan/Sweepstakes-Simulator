@@ -125,7 +125,7 @@ void judgment1(){
 
 void statistics(){
     cout<<"目前总抽数:"<<total<<endl;
-    cout<<"距离5星保底还有"<<max(0,(int)(increaset+(1-fivep)/increasep)-fivet)<<"抽,现在获取5星的概率为:"<<fivep*100<<"%"<<endl;
+    cout<<"距离5星保底还有"<<max(0,increasep!=0?(int)(increaset+(1-fivep)/increasep)-fivet:0)<<"抽,现在获取5星的概率为:"<<fivep*100<<"%"<<endl;
     cout<<"距离4星保底还有"<<max(0,(int)(fourpt-fourt))<<"抽"<<endl;
     cout<<"你抽到的:"<<endl;
     cout<<"5星:"<<five<<"个"<<endl;
