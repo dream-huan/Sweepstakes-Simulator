@@ -103,7 +103,7 @@ int lanauagechoose(){
 }
 
 void judgment1(){
-    if(fivep+fourp+threep!=1||increasep>1){
+    if(fivep+fourp+threep!=1||increasep>1||increaset<0||fourpt<0){
         cout<<"你输入的概率数据不正确，请仔细阅读配置文件中的提示"<<endl;
         exit(0);
     }
@@ -134,33 +134,21 @@ void sweepstakes(int times=1){
     int sum=100000;
     srand(time(NULL));
     int number=number=(rand()%sum)+1;
-    if(times==1){
-        cout<<"获得:"<<endl;
-        if(number>=1&&number<=sum*fivep) cout<<"5星"<<endl,five++;
-        else if(number<=sum&&number>=(sum-(fourp*sum))) cout<<"4星"<<endl,four++;
-        else cout<<"3星"<<endl,three++;
-    }           
-    else{
-        cout<<"获得:"<<endl;
-        while(times--){
-            number=(rand()%sum)+1;
-            if(number>=1&&number<=sum*fivep) cout<<"5星",five++;
-            else if(number<=sum&&number>=(sum-(fourp*sum))) cout<<"4星",four++;
-            else cout<<"3星",three++;
-            if(times!=0) cout<<",";
-        }
-        cout<<endl;
+    cout<<"获得:"<<endl;
+    while(times--){
+        number=(rand()%sum)+1;
+        if(number>=1&&number<=sum*fivep) cout<<"5星",five++;
+        else if(number<=sum&&number>=(sum-(fourp*sum))) cout<<"4星",four++;
+        else cout<<"3星",three++;
+        if(times!=0) cout<<",";
     }
+    cout<<endl;
 }
 
 void m(){
     judgment1();
-    cout<<"已完成。现在的概率为："<<endl;
-    cout<<"5星获取概率："<<fivep<<endl<<"四星获取概率："<<fourp<<endl<<"三星获取概率："<<threep<<endl;
-    cout<<fourpt<<"抽内必定获取到四星角色"<<endl;
-    cout<<"若从第"<<increaset<<"抽之前都没有获取到5星角色，则接下来每次获取5星的概率提升"<<increasep;
     int options;
-    cout<<endl<<"接下来请选择:"<<endl<<"1.抽取一次"<<endl<<"2.抽取十次"<<endl<<"3.数据统计"<<endl<<"4.清空数据"<<endl<<"其他.退出程序"<<endl;
+    cout<<"现在的概率为："<<endl<<"5星获取概率："<<fivep*100<<"%"<<endl<<"四星获取概率："<<fourp*100<<"%"<<endl<<"三星获取概率："<<threep*100<<"%"<<endl<<fourpt<<"抽内必定获取到四星角色"<<endl<<"若从第"<<increaset<<"抽之前都没有获取到5星角色，则接下来每次获取5星的概率提升"<<increasep*100<<"%"<<endl<<"接下来请选择:"<<endl<<"1.抽取一次"<<endl<<"2.抽取十次"<<endl<<"3.数据统计"<<endl<<"4.清空数据"<<endl<<"其他.退出程序"<<endl;
     while(cin>>options){
         switch(options){
             case 1:
