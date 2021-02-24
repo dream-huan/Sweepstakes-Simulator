@@ -59,6 +59,7 @@ double stringswitchdouble(string s){
     double ans=0;
     int temp=1;
     if(s.find("%")==string::npos){
+        if(s.find(".")==string::npos) s+=".0";
         for(int i=s.find(".")-1;i>=0;i--){
             ans+=temp*(s[i]-'0');
             temp*=10;
@@ -75,6 +76,7 @@ double stringswitchdouble(string s){
         else return pow(0.1,5);
     }else{
         s=s.substr(0,s.length()-1);
+        if(s.find(".")==string::npos) s+=".0";
         for(int i=s.find(".")-1;i>=0;i--){
             ans+=temp*(s[i]-'0');
             temp*=10;
@@ -123,8 +125,8 @@ void judgment1(){
 
 void statistics(){
     cout<<"目前总抽数:"<<total<<endl;
-    cout<<"距离5星保底还有"<<max(1,(int)(increaset+(1-fivep)/increasep)-fivet)<<"抽,现在获取5星的概率为:"<<fivep*100<<"%"<<endl;
-    cout<<"距离4星保底还有"<<max(1,(int)(fourpt-fourt))<<"抽"<<endl;
+    cout<<"距离5星保底还有"<<max(0,(int)(increaset+(1-fivep)/increasep)-fivet)<<"抽,现在获取5星的概率为:"<<fivep*100<<"%"<<endl;
+    cout<<"距离4星保底还有"<<max(0,(int)(fourpt-fourt))<<"抽"<<endl;
     cout<<"你抽到的:"<<endl;
     cout<<"5星:"<<five<<"个"<<endl;
     cout<<"4星:"<<four<<"个"<<endl;
@@ -154,7 +156,7 @@ void sweepstakes(int times=1){
         if(number>=1&&number<=sum*fivep) temp=5,five++,fivet=0,fivep=initalfive;
         else if(number<=sum&&number>=(sum-(fourp*sum))) temp=4,four++,fivet++,fourt=0;
         else temp=3,three++,fivet++,fourt++;
-        if(fourt==10){
+        if(fourt==fourpt){
             fourt=0;
             if(temp==3||temp==5) temp=4;
             four++;
