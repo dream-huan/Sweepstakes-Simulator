@@ -42,7 +42,7 @@ void writeText(string file,string s){
     struct tm* stime=localtime(&t);
     char tmp[32];
     sprintf(tmp, "%04d-%02d-%02d %02d:%02d:%02d",1900+stime->tm_year,1+stime->tm_mon,
-            stime->tm_mday, stime->tm_hour+8,
+            stime->tm_mday, stime->tm_hour,
             stime->tm_min,stime->tm_sec);
     ofstream out;
     out.open(file.data(),ios::app);
@@ -59,29 +59,29 @@ void writereports(string file){
     ofstream out;
     out.open(file.data());
     assert(out.is_open());
-    out<<"Ä¿Ç°×Ü³éÊý:"<<total<<endl;
-    out<<"¾àÀë5ÐÇ±£µ×»¹ÓÐ"<<max(0,increasep!=0?(int)(increaset+(1-fivep)/increasep)-fivet:0)<<"³é,ÏÖÔÚ»ñÈ¡5ÐÇµÄ¸ÅÂÊÎª:"<<fivep*100<<"%"<<endl;
-    out<<"¾àÀë4ÐÇ±£µ×»¹ÓÐ"<<max(0,(int)(fourpt-fourt))<<"³é"<<endl;
-    out<<"Æ½¾ù»ñÈ¡5ÐÇµÄ³éÊýÎª"<<(avgfive.empty()?0:accumulate(avgfive.begin(),avgfive.end(),0)/avgfive.size())<<"¡£ÆäÖÐ£¬ÓÐ"<<protectfive<<"³éÊÇÍ¨¹ý±£µ×²Å»ñµÃµÄ"<<endl;
-    out<<"Æ½¾ù»ñÈ¡4ÐÇµÄ³éÊýÎª"<<(avgfour.empty()?0:accumulate(avgfour.begin(),avgfour.end(),0)/avgfour.size())<<"¡£ÆäÖÐ£¬ÓÐ"<<protectfour<<"³éÊÇÍ¨¹ý±£µ×²Å»ñµÃµÄ"<<endl;
-    out<<"Äã³éµ½µÄ:"<<endl;
-    out<<"5ÐÇ:"<<five<<"¸ö,°üÀ¨{"<<endl;
+    out<<"ç›®å‰æ€»æŠ½æ•°:"<<total<<endl;
+    out<<"è·ç¦»5æ˜Ÿä¿åº•è¿˜æœ‰"<<max(0,increasep!=0?(int)(increaset+(1-fivep)/increasep)-fivet:0)<<"æŠ½,çŽ°åœ¨èŽ·å–5æ˜Ÿçš„æ¦‚çŽ‡ä¸º:"<<fivep*100<<"%"<<endl;
+    out<<"è·ç¦»4æ˜Ÿä¿åº•è¿˜æœ‰"<<max(0,(int)(fourpt-fourt))<<"æŠ½"<<endl;
+    out<<"å¹³å‡èŽ·å–5æ˜Ÿçš„æŠ½æ•°ä¸º"<<(avgfive.empty()?0:accumulate(avgfive.begin(),avgfive.end(),0)/avgfive.size())<<"ã€‚å…¶ä¸­ï¼Œæœ‰"<<protectfive<<"æŠ½æ˜¯é€šè¿‡ä¿åº•æ‰èŽ·å¾—çš„"<<endl;
+    out<<"å¹³å‡èŽ·å–4æ˜Ÿçš„æŠ½æ•°ä¸º"<<(avgfour.empty()?0:accumulate(avgfour.begin(),avgfour.end(),0)/avgfour.size())<<"ã€‚å…¶ä¸­ï¼Œæœ‰"<<protectfour<<"æŠ½æ˜¯é€šè¿‡ä¿åº•æ‰èŽ·å¾—çš„"<<endl;
+    out<<"ä½ æŠ½åˆ°çš„:"<<endl;
+    out<<"5æ˜Ÿ:"<<five<<"ä¸ª,åŒ…æ‹¬{"<<endl;
     for(map<string,int>::iterator i=ffivestar.begin();i!=ffivestar.end();i++){
         out<<i->first<<"*"<<i->second<<endl;
     }
     out<<"}"<<endl;
-    out<<"4ÐÇ:"<<four<<"¸ö,°üÀ¨{"<<endl;
+    out<<"4æ˜Ÿ:"<<four<<"ä¸ª,åŒ…æ‹¬{"<<endl;
     for(map<string,int>::iterator i=ffourstar.begin();i!=ffourstar.end();i++){
         out<<i->first<<"*"<<i->second<<endl;
     }
     out<<"}"<<endl;
-    out<<"3ÐÇ:"<<three<<"¸ö,°üÀ¨{"<<endl;
+    out<<"3æ˜Ÿ:"<<three<<"ä¸ª,åŒ…æ‹¬{"<<endl;
     for(map<string,int>::iterator i=tthreestar.begin();i!=tthreestar.end();i++){
         out<<i->first<<"*"<<i->second<<endl;
     }
     out<<"}"<<endl;
     out.close();
-    cout<<"Éú³ÉÍê±Ï"<<endl;
+    cout<<"ç”Ÿæˆå®Œæ¯•"<<endl;
 }
 
 void readText(string file)
@@ -207,7 +207,7 @@ void newswitch(){
 
 void judgment1(){
     if(fivep+fourp+threep!=1||increasep>1||increaset<0||fourpt<0||jsfi>1||jsfo>1||jsth>1){
-        cout<<"ÄãÊäÈëµÄ¸ÅÂÊÊý¾Ý²»ÕýÈ·£¬Çë×ÐÏ¸ÔÄ¶ÁÅäÖÃÎÄ¼þÖÐµÄÌáÊ¾"<<endl;
+        cout<<"ä½ è¾“å…¥çš„æ¦‚çŽ‡æ•°æ®ä¸æ­£ç¡®ï¼Œè¯·ä»”ç»†é˜…è¯»é…ç½®æ–‡ä»¶ä¸­çš„æç¤º"<<endl;
         #if __windows
         sleep(60);
         #endif
@@ -228,21 +228,21 @@ void judgment1(){
 }*/
 
 void statistics(){
-    cout<<"Ä¿Ç°×Ü³éÊý:"<<total<<endl;
-    cout<<"¾àÀë5ÐÇ±£µ×»¹ÓÐ"<<max(0,increasep!=0?(int)(increaset+(1-fivep)/increasep)-fivet:0)<<"³é,ÏÖÔÚ»ñÈ¡5ÐÇµÄ¸ÅÂÊÎª:"<<fivep*100<<"%"<<endl;
-    cout<<"¾àÀë4ÐÇ±£µ×»¹ÓÐ"<<max(0,(int)(fourpt-fourt))<<"³é"<<endl;
-    cout<<"Äã³éµ½µÄ:"<<endl;
-    cout<<"5ÐÇ:"<<five<<"¸ö,°üÀ¨{"<<endl;
+    cout<<"ç›®å‰æ€»æŠ½æ•°:"<<total<<endl;
+    cout<<"è·ç¦»5æ˜Ÿä¿åº•è¿˜æœ‰"<<max(0,increasep!=0?(int)(increaset+(1-fivep)/increasep)-fivet:0)<<"æŠ½,çŽ°åœ¨èŽ·å–5æ˜Ÿçš„æ¦‚çŽ‡ä¸º:"<<fivep*100<<"%"<<endl;
+    cout<<"è·ç¦»4æ˜Ÿä¿åº•è¿˜æœ‰"<<max(0,(int)(fourpt-fourt))<<"æŠ½"<<endl;
+    cout<<"ä½ æŠ½åˆ°çš„:"<<endl;
+    cout<<"5æ˜Ÿ:"<<five<<"ä¸ª,åŒ…æ‹¬{"<<endl;
     for(map<string,int>::iterator i=ffivestar.begin();i!=ffivestar.end();i++){
         cout<<i->first<<"*"<<i->second<<endl;
     }
     cout<<"}"<<endl;
-    cout<<"4ÐÇ:"<<four<<"¸ö,°üÀ¨{"<<endl;
+    cout<<"4æ˜Ÿ:"<<four<<"ä¸ª,åŒ…æ‹¬{"<<endl;
     for(map<string,int>::iterator i=ffourstar.begin();i!=ffourstar.end();i++){
         cout<<i->first<<"*"<<i->second<<endl;
     }
     cout<<"}"<<endl;
-    cout<<"3ÐÇ:"<<three<<"¸ö,°üÀ¨{"<<endl;
+    cout<<"3æ˜Ÿ:"<<three<<"ä¸ª,åŒ…æ‹¬{"<<endl;
     for(map<string,int>::iterator i=tthreestar.begin();i!=tthreestar.end();i++){
         cout<<i->first<<"*"<<i->second<<endl;
     }
@@ -264,7 +264,7 @@ void clear(){
     avgfour.clear();
     remove("data.txt");
     remove("datareports.txt");
-    cout<<"Êý¾ÝÒÑÇå¿Õ"<<endl;
+    cout<<"æ•°æ®å·²æ¸…ç©º"<<endl;
 }
 
 void fistarsweepstakes(){
@@ -317,7 +317,7 @@ void sweepstakes(int times=1){
     int sum=100000;
     srand(time(NULL));
     int number=(rand()%sum)+1;
-    cout<<"»ñµÃ:"<<endl;
+    cout<<"èŽ·å¾—:"<<endl;
     while(times--){
         total++;
         number=(rand()%sum)+1;
@@ -333,21 +333,21 @@ void sweepstakes(int times=1){
             if(temp==3) temp=4,three--,four++;
         }
         if(temp==5){
-            cout<<"5ÐÇ:"<<fivestar[number%sumfive];
+            cout<<"5æ˜Ÿ:"<<fivestar[number%sumfive];
             avgfive.push_back(total);
             if(!mfind(fivestar[number%sumfive],5)) ffivestar.insert(pair<string,int>(fivestar[number%sumfive],1));
-            writeText("data.txt",fivestar[number%sumfive]+"(5ÐÇ)");
+            writeText("data.txt",fivestar[number%sumfive]+"(5æ˜Ÿ)");
         }
         else if(temp==4){
-            cout<<"4ÐÇ:"<<fourstar[number%sumfour];
+            cout<<"4æ˜Ÿ:"<<fourstar[number%sumfour];
             avgfour.push_back(total);
             if(!mfind(fourstar[number%sumfour],4)) ffourstar.insert(pair<string,int>(fourstar[number%sumfour],1));
-            writeText("data.txt",fourstar[number%sumfour]+"(4ÐÇ)");
+            writeText("data.txt",fourstar[number%sumfour]+"(4æ˜Ÿ)");
         }
         else{
-            cout<<"3ÐÇ:"<<threestar[number%sumthree]; 
+            cout<<"3æ˜Ÿ:"<<threestar[number%sumthree]; 
             if(!mfind(threestar[number%sumthree],3)) tthreestar.insert(pair<string,int>(threestar[number%sumthree],1));
-            writeText("data.txt",threestar[number%sumthree]+"(3ÐÇ)");
+            writeText("data.txt",threestar[number%sumthree]+"(3æ˜Ÿ)");
         }
         if(times!=0) cout<<",";
     }
@@ -356,7 +356,7 @@ void sweepstakes(int times=1){
 
 void m(){
     int options;
-    cout<<"ÏÖÔÚµÄ¸ÅÂÊÎª£º"<<endl<<"5ÐÇ»ñÈ¡¸ÅÂÊ£º"<<fivep*100<<"%"<<endl<<"ËÄÐÇ»ñÈ¡¸ÅÂÊ£º"<<fourp*100<<"%"<<endl<<"ÈýÐÇ»ñÈ¡¸ÅÂÊ£º"<<threep*100<<"%"<<endl<<fourpt<<"³éÄÚ±Ø¶¨»ñÈ¡µ½ËÄÐÇ½ÇÉ«"<<endl<<"Èô´ÓµÚ"<<increaset<<"³éÖ®Ç°¶¼Ã»ÓÐ»ñÈ¡µ½5ÐÇ½ÇÉ«£¬Ôò½ÓÏÂÀ´Ã¿´Î»ñÈ¡5ÐÇµÄ¸ÅÂÊÌáÉý"<<increasep*100<<"%"<<endl<<"½ÓÏÂÀ´ÇëÑ¡Ôñ:"<<endl<<"1.³éÈ¡Ò»´Î"<<endl<<"2.³éÈ¡Ê®´Î"<<endl<<"3.Êý¾ÝÍ³¼Æ"<<endl<<"4.Çå¿ÕÊý¾Ý"<<endl<<"5.Éú³É³é¿¨·ÖÎö±¨¸æ"<<endl<<"ÆäËû.ÍË³ö³ÌÐò"<<endl;
+    cout<<"çŽ°åœ¨çš„æ¦‚çŽ‡ä¸ºï¼š"<<endl<<"5æ˜ŸèŽ·å–æ¦‚çŽ‡ï¼š"<<fivep*100<<"%"<<endl<<"å››æ˜ŸèŽ·å–æ¦‚çŽ‡ï¼š"<<fourp*100<<"%"<<endl<<"ä¸‰æ˜ŸèŽ·å–æ¦‚çŽ‡ï¼š"<<threep*100<<"%"<<endl<<fourpt<<"æŠ½å†…å¿…å®šèŽ·å–åˆ°å››æ˜Ÿè§’è‰²"<<endl<<"è‹¥ä»Žç¬¬"<<increaset<<"æŠ½ä¹‹å‰éƒ½æ²¡æœ‰èŽ·å–åˆ°5æ˜Ÿè§’è‰²ï¼Œåˆ™æŽ¥ä¸‹æ¥æ¯æ¬¡èŽ·å–5æ˜Ÿçš„æ¦‚çŽ‡æå‡"<<increasep*100<<"%"<<endl<<"æŽ¥ä¸‹æ¥è¯·é€‰æ‹©:"<<endl<<"1.æŠ½å–ä¸€æ¬¡"<<endl<<"2.æŠ½å–åæ¬¡"<<endl<<"3.æ•°æ®ç»Ÿè®¡"<<endl<<"4.æ¸…ç©ºæ•°æ®"<<endl<<"5.ç”ŸæˆæŠ½å¡åˆ†æžæŠ¥å‘Š"<<endl<<"å…¶ä»–.é€€å‡ºç¨‹åº"<<endl;
     while(cin>>options){
         switch(options){
             case 1:
@@ -385,7 +385,7 @@ void charactersorting(){
     for(map<string,double>::iterator i=fistar.begin();i!=fistar.end();i++){
         if(i->second!=0){
             if(i->second<0){
-                cout<<"¸ÅÂÊÐè·Ç¸º"<<endl;
+                cout<<"æ¦‚çŽ‡éœ€éžè´Ÿ"<<endl;
                 exit(0);
             }
             for(int j=temp+1;j<=temp+i->second*1000;j++) fivestar[j]=i->first;
@@ -406,7 +406,7 @@ void charactersorting(){
     for(map<string,double>::iterator i=fostar.begin();i!=fostar.end();i++){
         if(i->second!=0){
             if(i->second<0){
-                cout<<"¸ÅÂÊÐè·Ç¸º"<<endl;
+                cout<<"æ¦‚çŽ‡éœ€éžè´Ÿ"<<endl;
                 exit(0);
             }
             for(int j=temp+1;j<=temp+i->second*1000;j++) fourstar[j]=i->first;
@@ -427,7 +427,7 @@ void charactersorting(){
     for(map<string,double>::iterator i=thstar.begin();i!=thstar.end();i++){
         if(i->second!=0){
             if(i->second<0){
-                cout<<"¸ÅÂÊÐè·Ç¸º"<<endl;
+                cout<<"æ¦‚çŽ‡éœ€éžè´Ÿ"<<endl;
                 exit(0);
             }
             for(int j=temp+1;j<=temp+i->second*1000;j++) threestar[j]=i->first;
