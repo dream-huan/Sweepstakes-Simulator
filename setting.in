@@ -2,7 +2,7 @@
 
 [Probability]
 5 stars acquisition probability:[0.6%]
-4 stars acquisition probability:[5.0%]
+4 stars acquisition probability:[5%]
 3 stars acquisition probability:[94.4%]
 
 [Incremental]
@@ -11,6 +11,9 @@ From the [72] times onwards, the probability of obtaining 5 stars gradually incr
 
 [lanauage]
 Your preferred language is [zh-cn].("zh-cn":简体中文,"en-us":English(US));
+
+[version]
+[1.0.6]
 
 [Tips]
 1.The total probability of obtaining 5 stars, 4 stars, and 3 stars must be 100%.
