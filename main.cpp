@@ -26,6 +26,10 @@ int sumfive=0,sumfour=0,sumthree=0;
 
 map<string,int> ffivestar,ffourstar,tthreestar;
 
+int protectfive=0,protectfour=0;
+
+vector<int> avgfive,avgfour;
+
 string extraction(string s,string a,string b,int times=1){
     if(times==1) return s.substr(s.find(a)+1,s.find(b)-s.find(a)-1);
     else return extraction(s.substr(s.find(b)+1,s.length()),a,b,--times);
@@ -45,7 +49,37 @@ void writeText(string file,string s){
 }
 
 void writereports(string file){
-
+    remove("datareports.txt");
+    for(int i=avgfive.size()-1;i>0;i--){
+        avgfive[i]=avgfive[i]-avgfive[i-1];
+    }
+    for(int i=avgfour.size()-1;i>0;i--){
+        avgfour[i]=avgfour[i]-avgfour[i-1];
+    }
+    ofstream out(file);
+    out<<"目前总抽数:"<<total<<endl;
+    out<<"距离5星保底还有"<<max(0,increasep!=0?(int)(increaset+(1-fivep)/increasep)-fivet:0)<<"抽,现在获取5星的概率为:"<<fivep*100<<"%"<<endl;
+    out<<"距离4星保底还有"<<max(0,(int)(fourpt-fourt))<<"抽"<<endl;
+    out<<"平均获取5星的抽数为"<<accumulate(avgfive.begin(),avgfive.end(),0)/avgfive.size()<<"。其中，有"<<protectfive<<"抽是通过保底才获得的"<<endl;
+    out<<"平均获取4星的抽数为"<<accumulate(avgfour.begin(),avgfour.end(),0)/avgfour.size()<<"。其中，有"<<protectfour<<"抽是通过保底才获得的"<<endl;
+    out<<"你抽到的:"<<endl;
+    out<<"5星:"<<five<<"个,包括{"<<endl;
+    for(map<string,int>::iterator i=ffivestar.begin();i!=ffivestar.end();i++){
+        out<<i->first<<"*"<<i->second<<endl;
+    }
+    out<<"}"<<endl;
+    out<<"4星:"<<four<<"个,包括{"<<endl;
+    for(map<string,int>::iterator i=ffourstar.begin();i!=ffourstar.end();i++){
+        out<<i->first<<"*"<<i->second<<endl;
+    }
+    out<<"}"<<endl;
+    out<<"3星:"<<three<<"个,包括{"<<endl;
+    for(map<string,int>::iterator i=tthreestar.begin();i!=tthreestar.end();i++){
+        out<<i->first<<"*"<<i->second<<endl;
+    }
+    out<<"}"<<endl;
+    out.close();
+    cout<<"生成完毕"<<endl;
 }
 
 void readText(string file)
@@ -222,8 +256,10 @@ void clear(){
     ffivestar.clear();
     ffourstar.clear();
     tthreestar.clear();
+    avgfive.clear();
+    avgfour.clear();
     remove("data.txt");
-    
+    remove("datareports.txt");
     cout<<"数据已清空"<<endl;
 }
 
@@ -283,21 +319,24 @@ void sweepstakes(int times=1){
         number=(rand()%sum)+1;
         int temp;
         if(fivet>=increaset) fivep+=increasep;
-        if(number>=1&&number<=sum*fivep&&fourt!=fourpt) temp=5,five++,fivet=0,fivep=initalfive;
+        if(number>=1&&number<=sum*fivep&&fourt!=fourpt) temp=5,five++,fivet=0,fivep!=initalfive?fivep=initalfive,protectfive++:1;
         else if(number>=1&&number<=sum*fivep&&fourt==fourpt) temp=3,fivet++;
         else if(number<=sum&&number>=(sum-(fourp*sum))) temp=4,four++,fivet++,fourt=0;
         else temp=3,three++,fivet++,fourt++;
         if(fourt==fourpt){
             fourt=0;
+            protectfour++;
             if(temp==3) temp=4,three--,four++;
         }
         if(temp==5){
             cout<<"5星:"<<fivestar[number%sumfive];
+            avgfive.push_back(total);
             if(!mfind(fivestar[number%sumfive],5)) ffivestar.insert(pair<string,int>(fivestar[number%sumfive],1));
             writeText("data.txt",fivestar[number%sumfive]+"(5星)");
         }
         else if(temp==4){
             cout<<"4星:"<<fourstar[number%sumfour];
+            avgfour.push_back(total);
             if(!mfind(fourstar[number%sumfour],4)) ffourstar.insert(pair<string,int>(fourstar[number%sumfour],1));
             writeText("data.txt",fourstar[number%sumfour]+"(4星)");
         }
@@ -313,7 +352,7 @@ void sweepstakes(int times=1){
 
 void m(){
     int options;
-    cout<<"现在的概率为："<<endl<<"5星获取概率："<<fivep*100<<"%"<<endl<<"四星获取概率："<<fourp*100<<"%"<<endl<<"三星获取概率："<<threep*100<<"%"<<endl<<fourpt<<"抽内必定获取到四星角色"<<endl<<"若从第"<<increaset<<"抽之前都没有获取到5星角色，则接下来每次获取5星的概率提升"<<increasep*100<<"%"<<endl<<"接下来请选择:"<<endl<<"1.抽取一次"<<endl<<"2.抽取十次"<<endl<<"3.数据统计"<<endl<<"4.清空数据"<<endl<<"其他.退出程序"<<endl;
+    cout<<"现在的概率为："<<endl<<"5星获取概率："<<fivep*100<<"%"<<endl<<"四星获取概率："<<fourp*100<<"%"<<endl<<"三星获取概率："<<threep*100<<"%"<<endl<<fourpt<<"抽内必定获取到四星角色"<<endl<<"若从第"<<increaset<<"抽之前都没有获取到5星角色，则接下来每次获取5星的概率提升"<<increasep*100<<"%"<<endl<<"接下来请选择:"<<endl<<"1.抽取一次"<<endl<<"2.抽取十次"<<endl<<"3.数据统计"<<endl<<"4.清空数据"<<endl<<"5.生成抽卡分析报告"<<endl<<"其他.退出程序"<<endl;
     while(cin>>options){
         switch(options){
             case 1:
@@ -327,6 +366,9 @@ void m(){
                 continue;
             case 4:
                 clear();
+                continue;
+            case 5:
+                writereports("datareports.txt");
                 continue;
             default:
                 exit(0);
