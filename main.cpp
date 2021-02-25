@@ -24,6 +24,8 @@ string fivestar[1005],fourstar[1005],threestar[1005];
 
 int sumfive=0,sumfour=0,sumthree=0;
 
+map<string,int> ffivestar,ffourstar,tthreestar;
+
 string extraction(string s,string a,string b,int times=1){
     if(times==1) return s.substr(s.find(a)+1,s.find(b)-s.find(a)-1);
     else return extraction(s.substr(s.find(b)+1,s.length()),a,b,--times);
@@ -127,7 +129,7 @@ void readTextCharacter(string file)
             temp=3;
             continue;
         }
-        if(extraction(s,"[","]")=="") continue;
+        if(extraction(s,"[","]")==""||extraction(s,"[","]")=="Character setting") continue;
         if(temp==5) fistar.insert(pair<string,double>(extraction(s,"[","]"),stringswitchdouble(extraction(s,"[","]",2))));
         else if(temp==4) fostar.insert(pair<string,double>(extraction(s,"[","]"),stringswitchdouble(extraction(s,"[","]",2))));
         else thstar.insert(pair<string,double>(extraction(s,"[","]"),stringswitchdouble(extraction(s,"[","]",2))));
@@ -175,9 +177,21 @@ void statistics(){
     cout<<"距离5星保底还有"<<max(0,increasep!=0?(int)(increaset+(1-fivep)/increasep)-fivet:0)<<"抽,现在获取5星的概率为:"<<fivep*100<<"%"<<endl;
     cout<<"距离4星保底还有"<<max(0,(int)(fourpt-fourt))<<"抽"<<endl;
     cout<<"你抽到的:"<<endl;
-    cout<<"5星:"<<five<<"个"<<endl;
-    cout<<"4星:"<<four<<"个"<<endl;
-    cout<<"3星:"<<three<<"个"<<endl;
+    cout<<"5星:"<<five<<"个,包括{"<<endl;
+    for(map<string,int>::iterator i=ffivestar.begin();i!=ffivestar.end();i++){
+        cout<<i->first<<"*"<<i->second<<endl;
+    }
+    cout<<"}"<<endl;
+    cout<<"4星:"<<four<<"个,包括{"<<endl;
+    for(map<string,int>::iterator i=ffourstar.begin();i!=ffourstar.end();i++){
+        cout<<i->first<<"*"<<i->second<<endl;
+    }
+    cout<<"}"<<endl;
+    cout<<"3星:"<<three<<"个,包括{"<<endl;
+    for(map<string,int>::iterator i=tthreestar.begin();i!=tthreestar.end();i++){
+        cout<<i->first<<"*"<<i->second<<endl;
+    }
+    cout<<"}"<<endl;
 }
 
 void clear(){
@@ -208,6 +222,34 @@ void thstarsweepstakes(){
     cout<<threestar[number];
 }
 
+int mfind(string s,int special=5){
+    if(special==5){
+        for(map<string,int>::iterator i=ffivestar.begin();i!=ffivestar.end();i++){
+            if(i->first==s){
+                i->second++;
+                return 1;
+            }
+        }
+        return 0;
+    }else if(special==4){
+        for(map<string,int>::iterator i=ffourstar.begin();i!=ffourstar.end();i++){
+            if(i->first==s){
+                i->second++;
+                return 1;
+            }
+        }
+        return 0;
+    }else{
+        for(map<string,int>::iterator i=tthreestar.begin();i!=tthreestar.end();i++){
+            if(i->first==s){
+                i->second++;
+                return 1;
+            }
+        }
+        return 0;
+    }
+}
+
 void sweepstakes(int times=1){
     int sum=100000;
     srand(time(NULL));
@@ -225,9 +267,18 @@ void sweepstakes(int times=1){
             fourt=0;
             if(temp==3) temp=4,three--,four++;
         }
-        if(temp==5) cout<<"5星:"<<fivestar[number%sumfive];
-        else if(temp==4) cout<<"4星:"<<fourstar[number%sumfour];
-        else cout<<"3星:"<<threestar[number%sumthree]; 
+        if(temp==5){
+            cout<<"5星:"<<fivestar[number%sumfive];
+            if(!mfind(fivestar[number%sumfive],5)) ffivestar.insert(pair<string,int>(fivestar[number%sumfive],1));
+        }
+        else if(temp==4){
+            cout<<"4星:"<<fourstar[number%sumfour];
+            if(!mfind(fourstar[number%sumfour],4)) ffourstar.insert(pair<string,int>(fourstar[number%sumfour],1));
+        }
+        else{
+            cout<<"3星:"<<threestar[number%sumthree]; 
+            if(!mfind(threestar[number%sumthree],3)) tthreestar.insert(pair<string,int>(threestar[number%sumthree],1));
+        }
         if(times!=0) cout<<",";
     }
     cout<<endl;
