@@ -31,6 +31,23 @@ string extraction(string s,string a,string b,int times=1){
     else return extraction(s.substr(s.find(b)+1,s.length()),a,b,--times);
 }
 
+void writeText(string file,string s){
+    time_t t = time(NULL);
+    struct tm* stime=localtime(&t);
+    char tmp[32];
+    sprintf(tmp, "%04d-%02d-%02d %02d:%02d:%02d",1900+stime->tm_year,1+stime->tm_mon,
+            stime->tm_mday, stime->tm_hour+8,
+            stime->tm_min,stime->tm_sec);
+    ofstream out(file,ios::app);
+    out<<tmp<<" "<<s<<endl;
+    out<<"\n";
+    out.close();
+}
+
+void writereports(string file){
+
+}
+
 void readText(string file)
 {
     ifstream infile; 
@@ -201,6 +218,12 @@ void clear(){
     five=0;
     four=0;
     three=0;
+    fivep=initalfive;
+    ffivestar.clear();
+    ffourstar.clear();
+    tthreestar.clear();
+    remove("data.txt");
+    
     cout<<"数据已清空"<<endl;
 }
 
@@ -261,6 +284,7 @@ void sweepstakes(int times=1){
         int temp;
         if(fivet>=increaset) fivep+=increasep;
         if(number>=1&&number<=sum*fivep&&fourt!=fourpt) temp=5,five++,fivet=0,fivep=initalfive;
+        else if(number>=1&&number<=sum*fivep&&fourt==fourpt) temp=3,fivet++;
         else if(number<=sum&&number>=(sum-(fourp*sum))) temp=4,four++,fivet++,fourt=0;
         else temp=3,three++,fivet++,fourt++;
         if(fourt==fourpt){
@@ -270,14 +294,17 @@ void sweepstakes(int times=1){
         if(temp==5){
             cout<<"5星:"<<fivestar[number%sumfive];
             if(!mfind(fivestar[number%sumfive],5)) ffivestar.insert(pair<string,int>(fivestar[number%sumfive],1));
+            writeText("data.txt",fivestar[number%sumfive]+"(5星)");
         }
         else if(temp==4){
             cout<<"4星:"<<fourstar[number%sumfour];
             if(!mfind(fourstar[number%sumfour],4)) ffourstar.insert(pair<string,int>(fourstar[number%sumfour],1));
+            writeText("data.txt",fourstar[number%sumfour]+"(4星)");
         }
         else{
             cout<<"3星:"<<threestar[number%sumthree]; 
             if(!mfind(threestar[number%sumthree],3)) tthreestar.insert(pair<string,int>(threestar[number%sumthree],1));
+            writeText("data.txt",threestar[number%sumthree]+"(3星)");
         }
         if(times!=0) cout<<",";
     }
