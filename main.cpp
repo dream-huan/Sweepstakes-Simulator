@@ -1,4 +1,10 @@
 #include<bits/stdc++.h>
+#if __linux
+#include <unistd.h>
+#endif
+#if __windows
+#include<windows.h>
+#endif
 
 using namespace std;
 
@@ -11,6 +17,12 @@ double fourp,threep,increasep,initalfive;
 int five=0,four=0,three=0,total=0,fivet=0,fourt=0;
 
 int increaset,fourpt;
+
+map<string,double> fistar,fostar,thstar;
+
+string fivestar[1005],fourstar[1005],threestar[1005];
+
+int sumfive=0,sumfour=0,sumthree=0;
 
 string extraction(string s,string a,string b,int times=1){
     if(times==1) return s.substr(s.find(a)+1,s.find(b)-s.find(a)-1);
@@ -94,6 +106,35 @@ double stringswitchdouble(string s){
     }
 }
 
+void readTextCharacter(string file)
+{
+    ifstream infile; 
+    infile.open(file.data());
+    assert(infile.is_open());
+    string s;
+    int temp;
+    while(getline(infile,s))
+    {
+        if(extraction(s,"[","]")=="5star"){
+            temp=5;
+            continue;
+        }
+        else if(extraction(s,"[","]")=="4star"){
+            temp=4;
+            continue;
+        }
+        else if(extraction(s,"[","]")=="3star"){
+            temp=3;
+            continue;
+        }
+        if(extraction(s,"[","]")=="") continue;
+        if(temp==5) fistar.insert(pair<string,double>(extraction(s,"[","]"),stringswitchdouble(extraction(s,"[","]",2))));
+        else if(temp==4) fostar.insert(pair<string,double>(extraction(s,"[","]"),stringswitchdouble(extraction(s,"[","]",2))));
+        else thstar.insert(pair<string,double>(extraction(s,"[","]"),stringswitchdouble(extraction(s,"[","]",2))));
+    }
+    infile.close();     
+}
+
 void newswitch(){
     fivep=stringswitchdouble(fiveprobability);
     fourp=stringswitchdouble(fourprobability);
@@ -112,6 +153,12 @@ void newswitch(){
 void judgment1(){
     if(fivep+fourp+threep!=1||increasep>1||increaset<0||fourpt<0){
         cout<<"你输入的概率数据不正确，请仔细阅读配置文件中的提示"<<endl;
+        #if __windows
+        sleep(60);
+        #endif
+        #if __linux
+        usleep(3600);
+        #endif
         exit(0);
     }
 }
@@ -143,35 +190,50 @@ void clear(){
     cout<<"数据已清空"<<endl;
 }
 
+void fistarsweepstakes(){
+    srand(time(NULL));
+    int number=(rand()%sumfive)+1;
+    cout<<fivestar[number];
+}
+
+void fostarsweepstakes(){
+    srand(time(NULL));
+    int number=(rand()%sumfour)+1;
+    cout<<fourstar[number];
+}
+
+void thstarsweepstakes(){
+    srand(time(NULL));
+    int number=(rand()%sumthree)+1;
+    cout<<threestar[number];
+}
+
 void sweepstakes(int times=1){
     int sum=100000;
     srand(time(NULL));
-    int number=number=(rand()%sum)+1;
+    int number=(rand()%sum)+1;
     cout<<"获得:"<<endl;
     while(times--){
         total++;
         number=(rand()%sum)+1;
         int temp;
         if(fivet>=increaset) fivep+=increasep;
-        if(number>=1&&number<=sum*fivep) temp=5,five++,fivet=0,fivep=initalfive;
+        if(number>=1&&number<=sum*fivep&&fourt!=fourpt) temp=5,five++,fivet=0,fivep=initalfive;
         else if(number<=sum&&number>=(sum-(fourp*sum))) temp=4,four++,fivet++,fourt=0;
         else temp=3,three++,fivet++,fourt++;
         if(fourt==fourpt){
             fourt=0;
-            if(temp==3||temp==5) temp=4;
-            four++;
-            three--;
+            if(temp==3) temp=4,three--,four++;
         }
-        if(temp==5) cout<<"5星";
-        else if(temp==4) cout<<"4星";
-        else cout<<"3星"; 
+        if(temp==5) cout<<"5星:"<<fivestar[number%sumfive];
+        else if(temp==4) cout<<"4星:"<<fourstar[number%sumfour];
+        else cout<<"3星:"<<threestar[number%sumthree]; 
         if(times!=0) cout<<",";
     }
     cout<<endl;
 }
 
 void m(){
-    judgment1();
     int options;
     cout<<"现在的概率为："<<endl<<"5星获取概率："<<fivep*100<<"%"<<endl<<"四星获取概率："<<fourp*100<<"%"<<endl<<"三星获取概率："<<threep*100<<"%"<<endl<<fourpt<<"抽内必定获取到四星角色"<<endl<<"若从第"<<increaset<<"抽之前都没有获取到5星角色，则接下来每次获取5星的概率提升"<<increasep*100<<"%"<<endl<<"接下来请选择:"<<endl<<"1.抽取一次"<<endl<<"2.抽取十次"<<endl<<"3.数据统计"<<endl<<"4.清空数据"<<endl<<"其他.退出程序"<<endl;
     while(cin>>options){
@@ -194,9 +256,63 @@ void m(){
     }
 }
 
+void charactersorting(){
+    int special=0,temp=0,average;
+    for(map<string,double>::iterator i=fistar.begin();i!=fistar.end();i++){
+        if(i->second!=0){
+            for(int j=temp+1;j<=temp+i->second*1000;j++) fivestar[j]=i->first;
+            temp+=i->second*1000;
+        }
+        if(i->second==0) special++;
+    }
+    average=(1000-temp)/special;
+    for(map<string,double>::iterator i=fistar.begin();i!=fistar.end();i++){
+        if(i->second==0){
+            for(int j=temp+1;j<=temp+average;j++) fivestar[j]=i->first;
+            temp+=average;
+        }
+    }
+    sumfive=temp;
+    special=0,temp=0,average;
+    for(map<string,double>::iterator i=fostar.begin();i!=fostar.end();i++){
+        if(i->second!=0){
+            for(int j=temp+1;j<=temp+i->second*1000;j++) fourstar[j]=i->first;
+            temp+=i->second*1000;
+        }
+        if(i->second==0) special++;
+    }
+    average=(1000-temp)/special;
+    for(map<string,double>::iterator i=fostar.begin();i!=fostar.end();i++){
+        if(i->second==0){
+            for(int j=temp+1;j<=temp+average;j++) fourstar[j]=i->first;
+            temp+=average;
+        }
+    }
+    sumfour=temp;
+    special=0,temp=0,average;
+    for(map<string,double>::iterator i=thstar.begin();i!=thstar.end();i++){
+        if(i->second!=0){
+            for(int j=temp+1;j<=temp+i->second*1000;j++) threestar[j]=i->first;
+            temp+=i->second*1000;
+        }
+        if(i->second==0) special++;
+    }
+    average=(1000-temp)/special;
+    for(map<string,double>::iterator i=thstar.begin();i!=thstar.end();i++){
+        if(i->second==0){
+            for(int j=temp+1;j<=temp+average;j++) threestar[j]=i->first;
+            temp+=average;
+        }
+    }
+    sumthree=temp;
+}
+
 int main(){
     readText("setting.in");
+    readTextCharacter("Character setting.in");
     newswitch();
+    judgment1();
+    charactersorting();
     m();
     return 0;
 }
