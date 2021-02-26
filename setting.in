@@ -10,10 +10,13 @@ From the [72] times onwards, the probability of obtaining 5 stars gradually incr
 4 stars are bound to appear in [10] draws or less.
 
 [lanauage]
-Your preferred language is [zh-cn].("zh-cn":简体中文,"en-us":English(US));
+Your preferred language is [zh-cn].("zh-cn":简体中文,"en-us":English(US))
+
+[Random method]
+Your preferred Random method is [].(True Random or Pseudo-random)
 
 [version]
-[1.0.7]
+[1.0.8]
 
 [Tips]
 1.The total probability of obtaining 5 stars, 4 stars, and 3 stars must be 100%.
